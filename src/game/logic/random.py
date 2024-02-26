@@ -12,16 +12,60 @@ class RandomLogic(BaseLogic):
         self.goal_position: Optional[Position] = None
         self.current_direction = 0
 
+    def gameObjectPos(self, board: Board, tipe: str) -> list[GameObject]:
+        ans = []
+        for i in board.game_objects: 
+            if(i.type == tipe):
+                ans.append(i)
+
+        return ans
+    
+    def redDiamond(self, arr: list[GameObject]) -> list[GameObject]: 
+        ans = []
+        for i in arr: 
+            if(i.properties.points == 2): 
+                ans.append(i)
+        return ans
+    
+    def blueDiamond(self, arr: list[GameObject]) -> list[GameObject]: 
+        ans = [] 
+        for i in arr: 
+            if(i.properties.points == 1): 
+                ans.append(i) 
+        return ans
+
+
     def next_move(self, board_bot: GameObject, board: Board):
         props = board_bot.properties
+        diamondPos = self.gameObjectPos(board, "DiamondGameObject")
+        redDiamondPos = self.redDiamond(diamondPos)
+        blueDiamondPos = self.blueDiamond(diamondPos)
         # Analyze new state
         if props.diamonds == 5:
             # Move to base
             base = board_bot.properties.base
             self.goal_position = base
         else:
-            # Just roam around
-            self.goal_position = None
+            closestRed = min(
+                redDiamondPos,
+                key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+            )
+            closestBlue = min(
+                blueDiamondPos,
+                key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+            )
+
+            closeToRed = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
+            closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
+            if(closeToRed < closeToBlue):
+                self.goal_position = closestRed.position
+            else: 
+                self.goal_position = closestBlue.position
+                
+        
+        # ansTele = self.diamondPos(board, "TeleportGameObject")
+        # print("diamon: " + str(ansdiamond))
+        # print("teleporter: " +  str(ansTele))
 
         current_position = board_bot.position
         if self.goal_position:
@@ -32,6 +76,7 @@ class RandomLogic(BaseLogic):
                 self.goal_position.x,
                 self.goal_position.y,
             )
+        
         else:
             # Roam around
             delta = self.directions[self.current_direction]
