@@ -60,11 +60,7 @@ class RandomLogic(BaseLogic):
                 self.goal_position = closestRed.position
             else: 
                 self.goal_position = closestBlue.position
-                
-        
-        # ansTele = self.diamondPos(board, "TeleportGameObject")
-        # print("diamon: " + str(ansdiamond))
-        # print("teleporter: " +  str(ansTele))
+
 
         current_position = board_bot.position
         if self.goal_position:

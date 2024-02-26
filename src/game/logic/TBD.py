@@ -15,8 +15,6 @@ class TBDLogic(BaseLogic):
 
     def next_move(self, board_bot: GameObject, board: Board):
 
-        for i in board.game_objects:
-            if i.type == ""
 
         props = board_bot.properties
         # Analyze new state
