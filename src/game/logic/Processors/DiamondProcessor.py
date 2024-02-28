@@ -26,7 +26,7 @@ class DiamondProcessor(Processor):
                 ans.append(i) 
         return ans
     
-    def nearestDiamond(blue: list[GameObject], red: list[GameObject], board_bot: GameObject) -> GameObject.position:
+    def nearestDiamond(blue: list[GameObject], red: list[GameObject], board_bot: GameObject) -> tuple[int, GameObject.position]:
         closestRed = min(
             blue,
             key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
@@ -36,10 +36,11 @@ class DiamondProcessor(Processor):
             key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
         )
 
-        closeToRed = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
-        closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
-        
+        closeToRed: int = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
+        closeToBlue: int = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
+
+
         if(closeToRed < closeToBlue):
-            return closestRed.position
+            return [closeToRed, closestRed.position]
         else: 
-            return closestBlue.position
+            return [closeToBlue, closestBlue.position]

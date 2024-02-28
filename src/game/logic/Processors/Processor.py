@@ -6,18 +6,17 @@ from game.models import GameObject, Board, Position
 from ...util import get_direction
 from ...models import Board
 
-
 class Processor:
 
     def __init__(self):
         pass
 
     @staticmethod
-    def position_of_objects(self, board: Board, tipe: str) -> [(int, int)]:
-        ans: [(int, int)] = []
+    def position_of_objects(self, board: Board, tipe: str) -> list[GameObject]:
+        ans: list[GameObject] = []
         for game_object in board.game_objects:
             if game_object.type == tipe:
-                ans.append((game_object.position.x, game_object.position.y))
+                ans.append(game_object)
         return ans
 
 
