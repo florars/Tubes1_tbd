@@ -1,3 +1,5 @@
+"""
+
 from ...models import Board, Bot, GameObject
 from typing import Optional
 
@@ -37,3 +39,4 @@ class ButtonProcessor:
         button: GameObject = [game_object for game_object in board.game_objects
                               if game_object.type == "ButtonGameObject"][0]
         return round(self.eval_button(bot_x, bot_y, button, nearest_dia))
+"""

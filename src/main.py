@@ -9,6 +9,8 @@ from game.logic.random import RandomLogic
 from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.TBD import TBDLogic
+#from game.logic.random2 import RandomLogic2
+import traceback
 
 init()
 BASE_URL = "http://localhost:3000/api"
@@ -137,7 +139,7 @@ if not current_board_id:
             break
 
     if not board_joined:
-        exit()
+        exit(1)
 else:
     # Try to join the one we specified
     success = bot_handler.join(bot.id, current_board_id)
@@ -168,15 +170,23 @@ move_delay = board.minimum_delay_between_moves / 1000
 # Game play loop
 #
 ###############################################################################
+print("here")
+
 while True:
     # Find our info among the bots on the board
     board_bot = board.get_bot(bot)
     if not board_bot:
         # Managed to get game over
         break
-
+    print("bot found")
     # Calculate next move
-    delta_x, delta_y = bot_logic.next_move(board_bot, board)
+    try:
+        delta_x, delta_y = bot_logic.next_move(board_bot, board)
+    except:
+        traceback.print_exc()
+        for b in board.bots:
+            print(b)
+        input()
     # delta_x, delta_y = (1, 0)
     if not board.is_valid_move(board_bot.position, delta_x, delta_y):
         print(
