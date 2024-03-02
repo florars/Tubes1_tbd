@@ -20,14 +20,15 @@ class GoHomeProcessor(Processor):
         
     #TODO: kalo udah 3 diamonds wander sekitar base aja
     def wanderAroundHome(self, board_bot: GameObject, board: Board) -> Optional[list[int, Position]]:
+        base = board_bot.properties.base
         closestToBase = min(
                     board.diamonds,
-                    key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+                    key = lambda x: abs(x.position.x - base.position.x) + abs(x.position.y - base.position.y)
                 )
-        if (board_bot.properties.diamonds >= 3):
+        if (board_bot.properties.diamonds >= 3 and ((abs(closestToBase.position.x - base.x) + abs(closestToBase.position.y - base.y)) <= 4)):
             return ([1, closestToBase.position]) #TODO: figure out priorities
         else:
-            return ([None,None])
+            return ([1,base]) #TODO: figure out priorities
 
     def process(self, board_bot: GameObject, board: Board) -> Optional[list[tuple[int, Position]]]:
         a = self.goHomeImmediately(board_bot)
