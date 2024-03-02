@@ -46,11 +46,13 @@ class DiamondProcessor(Processor):
         closeToRed: int = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
         closeToBlue: int = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
 
+        # TODO: BELUM LENGKAP!
+        prio_dia: list[int] = [10000, 100, 90, 85, 80, 75, 51, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         if(closeToRed < closeToBlue):
-            return closeToRed, closestRed.position
+            return prio_dia[closeToRed], closestRed.position # TODO: HATI-HATI OUT OF BOUNDS!
         else: 
-            return closeToBlue, closestBlue.position
+            return prio_dia[closeToBlue], closestBlue.position
 
     def process(self, board_bot: GameObject, board: Board) -> Optional[list[tuple[int, Position]]]:
         game_objects = board.game_objects

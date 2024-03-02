@@ -12,6 +12,9 @@ def get_direction(current_x, current_y, dest_x, dest_y):
         delta_y = 0
     return (delta_x, delta_y)
 
+def get_dist(pa: Position, pb: Position) -> int:
+    return abs(pa.x - pb.x) + abs(pa.y - pb.y)
+
 
 def position_equals(a: Position, b: Position):
     return a.x == b.x and a.y == b.y

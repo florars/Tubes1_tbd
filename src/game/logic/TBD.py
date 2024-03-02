@@ -6,7 +6,7 @@ from game.models import GameObject, Board, Position
 #from ..util import get_direction
 from game.logic.Processors.selfdefenseprocess import SelfDefense
 from game.logic.Processors.DiamondProcessor import DiamondProcessor
-
+from game.logic.Processors.GoHomeProcessor import GoHomeProcessor
 
 class TBDLogic(BaseLogic):
     def __init__(self):
@@ -15,12 +15,14 @@ class TBDLogic(BaseLogic):
         self.current_direction = 0
         self.SelfDefenseProcessor: SelfDefense = SelfDefense()
         self.DiamondProcessor: DiamondProcessor = DiamondProcessor()
-
+        self.GoHomeProcessor: GoHomeProcessor = GoHomeProcessor()
 
     def next_move(self, board_bot: GameObject, board: Board):
         possible_moves: list[tuple[int, Position]] = []
         possible_moves.extend(self.SelfDefenseProcessor.process(board_bot, board))
         possible_moves.extend(self.DiamondProcessor.process(board_bot, board))
+        possible_moves.extend(self.GoHomeProcessor.process(board_bot, board))
+        print(possible_moves)
         wrong_moves = [False, False, False, False]
         real_moves: list[tuple[int, Position]] = []
         for prio, pos in possible_moves:
@@ -31,7 +33,7 @@ class TBDLogic(BaseLogic):
                         wrong_moves[ind] = True
             else:
                 real_moves.append((prio, pos))
-        real_moves.sort(key=lambda x: x[0])
+        real_moves.sort(key=lambda x: x[0], reverse=True)
         #print(wrong_moves)
         for prio, pos in real_moves:
             for ind in range(4):
