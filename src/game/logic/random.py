@@ -45,17 +45,21 @@ class RandomLogic(BaseLogic):
             base = board_bot.properties.base
             self.goal_position = base
         else:
-            closestRed = min(
-                redDiamondPos,
-                key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
-            )
-            closestBlue = min(
-                blueDiamondPos,
-                key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
-            )
+            closeToRed: int = 1000
+            closeToBlue: int = 1000
+            if redDiamondPos:
+                closestRed = min(
+                    redDiamondPos,
+                    key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+                )
+                closeToRed = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
 
-            closeToRed = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
-            closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
+            if blueDiamondPos:
+                closestBlue = min(
+                    blueDiamondPos,
+                    key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+                ) 
+                closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
             if(closeToRed < closeToBlue):
                 self.goal_position = closestRed.position
             else: 

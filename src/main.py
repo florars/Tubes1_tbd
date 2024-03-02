@@ -13,6 +13,8 @@ from game.logic.TBD import TBDLogic
 import traceback
 
 init()
+# print("init")
+# input()
 BASE_URL = "http://localhost:3000/api"
 DEFAULT_BOARD_ID = 1
 CONTROLLERS = {
@@ -116,6 +118,8 @@ if not bot.name:
 print(Fore.BLUE + Style.BRIGHT + "Welcome back, " + Style.RESET_ALL + bot.name)
 
 # Setup variables
+# print("setup variables")
+# input()
 logic_class = CONTROLLERS[logic_controller]
 bot_logic: BaseLogic = logic_class()
 

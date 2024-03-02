@@ -11,7 +11,13 @@ class DiamondProcessor(Processor):
     def __init__(self): 
         super().__init__()
 
-    def redDiamond(self, arr: list[GameObject]) -> list[GameObject]: 
+    def isInventoryRed(self, board_bot: GameObject) -> bool:
+        if(board_bot.properties.diamonds == 4):
+            return True
+        else:
+            return False
+
+    def redDiamond(self, arr: list[GameObject]) -> list[GameObject]:
         ans = []
         for i in arr: 
             if(i.properties.points == 2): 
@@ -25,8 +31,7 @@ class DiamondProcessor(Processor):
                 ans.append(i) 
         return ans
     
-    def nearestDiamond(self, blue: list[GameObject], red: list[GameObject], board_bot: GameObject) -> \
-            tuple[int, Position]:
+    def nearestDiamond(self, blue: list[GameObject], red: list[GameObject], board_bot: GameObject) ->tuple[int, Position]:
         if not red:
             closestRed = GameObject(0, Position(1000, 1000), None, None)
         else:
@@ -49,10 +54,14 @@ class DiamondProcessor(Processor):
         # TODO: BELUM LENGKAP!
         prio_dia: list[int] = [10000, 100, 90, 85, 80, 75, 51, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+        if (board_bot.properties.diamonds == 4):
+            return closeToBlue, closestBlue.position
+
         if(closeToRed < closeToBlue):
             return prio_dia[closeToRed], closestRed.position # TODO: HATI-HATI OUT OF BOUNDS!
-        else: 
+        else:
             return prio_dia[closeToBlue], closestBlue.position
+
 
     def process(self, board_bot: GameObject, board: Board) -> Optional[list[tuple[int, Position]]]:
         game_objects = board.game_objects
