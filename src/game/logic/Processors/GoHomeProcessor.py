@@ -45,6 +45,6 @@ class GoHomeProcessor(Processor):
         priority_home = self.calc_prio(dist_home, dist_dia, multiplier, likelihood)
         if priority_home <= 0:
             return []
-        #print("PRIORITY", priority_home)
+        print("PRIORITY", priority_home)
         return [(priority_home, home_pos)]
 
