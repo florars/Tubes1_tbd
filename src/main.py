@@ -9,12 +9,10 @@ from game.logic.random import RandomLogic
 from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.TBD import TBDLogic
-#from game.logic.random2 import RandomLogic2
 import traceback
+from time import time
 
 init()
-# print("init")
-# input()
 BASE_URL = "http://localhost:3000/api"
 DEFAULT_BOARD_ID = 1
 CONTROLLERS = {
@@ -118,8 +116,6 @@ if not bot.name:
 print(Fore.BLUE + Style.BRIGHT + "Welcome back, " + Style.RESET_ALL + bot.name)
 
 # Setup variables
-# print("setup variables")
-# input()
 logic_class = CONTROLLERS[logic_controller]
 bot_logic: BaseLogic = logic_class()
 
@@ -143,7 +139,7 @@ if not current_board_id:
             break
 
     if not board_joined:
-        exit(1)
+        exit()
 else:
     # Try to join the one we specified
     success = bot_handler.join(bot.id, current_board_id)
@@ -173,24 +169,25 @@ move_delay = board.minimum_delay_between_moves / 1000
 #
 # Game play loop
 #
-###############################################################################
-print("here")
-
+####################################################################
+total_time = 0
+cnt_called = 0
 while True:
     # Find our info among the bots on the board
     board_bot = board.get_bot(bot)
     if not board_bot:
         # Managed to get game over
         break
-    print("bot found")
+
     # Calculate next move
     try:
+        beg = time()
         delta_x, delta_y = bot_logic.next_move(board_bot, board)
-    except:
+        en = time()
+        total_time += en - beg
+        cnt_called += 1
+    except Exception as e:
         traceback.print_exc()
-        for b in board.bots:
-            print(b)
-        input()
     # delta_x, delta_y = (1, 0)
     if not board.is_valid_move(board_bot.position, delta_x, delta_y):
         print(
@@ -228,3 +225,5 @@ while True:
 #
 ###############################################################################
 print(Fore.BLUE + Style.BRIGHT + "Game over!" + Style.RESET_ALL)
+print(total_time / cnt_called)
+input()
