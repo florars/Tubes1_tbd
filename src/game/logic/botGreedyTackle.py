@@ -53,7 +53,7 @@ class greedyTackle(Processor):
             if(botToRich < botToEnemy):
                 self.goal_position = botToRich
             else:
-                self.goal.position = botToEnemy
+                self.goal_position = botToEnemy
 
         current_position: Position = board_bot.position
         if self.goal_position:
