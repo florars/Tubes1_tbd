@@ -14,6 +14,7 @@ class TBDLogic(BaseLogic):
     def __init__(self):
         self.directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         self.goal_position: Optional[Position] = None
+        self.memory_wrong_move = []
         self.current_direction = 0
         self.SelfDefenseProcessor: SelfDefense = SelfDefense()
         self.DiamondProcessor: DiamondProcessor = DiamondProcessor()
@@ -23,11 +24,42 @@ class TBDLogic(BaseLogic):
         self.TackleTarget = None
         self.OldPos: Optional[Position] = None
 
+    def no_obstacle(self, dist_x, dist_y, pos_fr: Position, pos_to: Position, board: Board):
+        teleporter = [game_object.position for game_object in list(filter(lambda x: x.type == "TeleportGameObject", board.game_objects))]
+        but_l = [game_object.position for game_object in list(filter(lambda x: x.type == "DiamondButtonGameObject", board.game_objects))]
+        if pos_to in teleporter or pos_to in but_l:
+            return True
+        func_dist = lambda x, y: abs(x.x - y.x) + abs(x.y - y.y)
+        same_x, same_y = -1, -1
+        min_x, max_x, min_y, max_y = -1, -1, -1, -1
+        if dist_y == 0:
+            same_y = pos_fr.y
+            min_x = min(pos_fr.x, pos_to.x)
+            max_x = max(pos_fr.x, pos_to.x)
+            same_x = pos_to.x
+            min_y = min(pos_fr.y, pos_to.y)
+            max_y = max(pos_fr.y, pos_to.y)
+        else:
+            same_y = pos_to.y
+            min_x = min(pos_fr.x, pos_to.x)
+            max_x = max(pos_fr.x, pos_to.x)
+            same_x = pos_fr.x
+            min_y = min(pos_fr.y, pos_to.y)
+            max_y = max(pos_fr.y, pos_to.y)
+        teleporter.extend(but_l)
+        for obs in teleporter:
+            if func_dist(obs, pos_fr) <= 2 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)):
+                return False
+        return True
+
     def next_move(self, board_bot: GameObject, board: Board):
+        wrong_moves = [False, False, False, False]
+        for wr in self.memory_wrong_move:
+            wrong_moves[wr] = True
+        self.memory_wrong_move = []
         possible_moves: list[tuple[int, Position]] = []
         listSelfD = self.SelfDefenseProcessor.process(board_bot, board)
         if len(listSelfD) > 0 and listSelfD[0][0] == -2:
-            self.OldPos = board_bot.position
             if ((self.TackleTarget is not None and
                  self.TackleTarget == listSelfD[0][1].properties.name
                 and self.TackleCounter == 0) or self.TackleTarget is None or self.TackleTarget !=
@@ -35,6 +67,8 @@ class TBDLogic(BaseLogic):
                 self.TackleTarget = listSelfD[0][1].properties.name
                 self.TackleCounter += 1
                 print(self.TackleTarget, self.TackleCounter)
+                self.goal_position = None
+                self.OldPos = board_bot.position
                 return listSelfD[0][1].position.x - board_bot.position.x, listSelfD[0][1].position.y - board_bot.position.y
         self.TackleTarget = None
         self.TackleCounter = 0
@@ -64,7 +98,6 @@ class TBDLogic(BaseLogic):
                 real_moves.append((prio, pos))
         
         """
-        wrong_moves = [False, False, False, False]
         cnt_wrong_mv = 0
         if board_bot.position.x == 14:
             wrong_moves[0] = True
@@ -96,9 +129,11 @@ class TBDLogic(BaseLogic):
                 cnt_wrong_mv += 1
         """
         real_moves.sort(key=lambda x: x[0], reverse=True)
+        teleporter = [game_object.position for game_object in list(filter(lambda x: x.type == "TeleportGameObject", board.game_objects))]
+        but_l = [game_object.position for game_object in list(filter(lambda x: x.type == "DiamondButtonGameObject", board.game_objects))]
         #print(possible_moves)
-        #print(real_moves)
-        #print(wrong_moves)
+        print(real_moves)
+        print(wrong_moves)
         #print(board_bot.position.x, board_bot.position.y)
         #print(board_bot.properties.diamonds)
         for prio, pos in real_moves:
@@ -108,10 +143,14 @@ class TBDLogic(BaseLogic):
                 dist_x, dist_y = self.directions[ind]
                 cur_dist = abs(board_bot.position.x - pos.x) + abs(board_bot.position.y - pos.y)
                 after_dist = abs(board_bot.position.x + dist_x - pos.x) + abs(board_bot.position.y + dist_y - pos.y)
-                if after_dist < cur_dist:
+                pos_after = Position(board_bot.position.y + dist_y, board_bot.position.x + dist_x)
+                if after_dist < cur_dist and self.no_obstacle(dist_x, dist_y, board_bot.position, pos, board):
                     self.goal_position = pos
+                    self.OldPos = board_bot.position
+                    print(pos)
                     return self.directions[ind]
         self.goal_position = None
+        self.OldPos = board_bot.position
         for i in range(4):
             if not wrong_moves[i]:
                 return self.directions[i]

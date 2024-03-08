@@ -6,12 +6,14 @@ from ...models import Board
 from ...logic.Processors.Processor import Processor
 from ...util import *
 from .DiamondProcessor import DiamondProcessor
+from .GoHomeProcessor import GoHomeProcessor
 
 
 class Teleporter(Processor):
     def __init__(self):
         super().__init__()
         self.DiamondProcessor: DiamondProcessor = DiamondProcessor()
+        self.GoHomeProcessor: GoHomeProcessor = GoHomeProcessor()
         self.multiplier = 2
 
     """
@@ -86,14 +88,12 @@ class Teleporter(Processor):
             ans.append((max1, tele1.position))
         if max2 > 0 and max2 > maxi_val and max2 > max1:
             ans.append((max2, tele2.position))
-        dist1_home = dtl1 + abs(board_bot.properties.base.x - tele1.position.x) + \
-                     abs(board_bot.properties.base.y - tele1.position.y)
-        dist2_home = dtl2 + abs(board_bot.properties.base.x - tele2.position.x) + \
-                     abs(board_bot.properties.base.y - tele2.position.y)
-        if dist1_home < len(self.DiamondProcessor.prio_dia):
-            if self.DiamondProcessor.prio_dia[dist1_home] > dist_to_home:
-                ans.append((self.DiamondProcessor.prio_dia[dist1_home], tele1.position))
-        if dist2_home < len(self.DiamondProcessor.prio_dia):
-            if self.DiamondProcessor.prio_dia[dist2_home] > dist_to_home:
-                ans.append((self.DiamondProcessor.prio_dia[dist2_home], tele2.position))
+        tele1GO = GameObject(board_bot.id, tele1.position, board_bot.type, board_bot.properties)
+        tele2GO = GameObject(board_bot.id, tele2.position, board_bot.type, board_bot.properties)
+        prio_h_through_tele1 = self.GoHomeProcessor.process(tele1GO, board, dtl1, True)
+        prio_h_through_tele2 = self.GoHomeProcessor.process(tele2GO, board, dtl2, True)
+        if prio_h_through_tele1:
+            ans.append((prio_h_through_tele1[0][0] - 30, tele1.position))
+        if prio_h_through_tele2:
+            ans.append((prio_h_through_tele2[0][0] - 30, tele2.position))
         return ans
