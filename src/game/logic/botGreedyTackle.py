@@ -14,7 +14,6 @@ class greedyTackle(Processor):
         self.current_direction = 0
 
     def listEnemy(self, board_bot: GameObject, board: Board) -> list[GameObject]: 
-            props = board_bot.properties
             listBots: list[GameObject] = []
             if(len(board.bots) == 1):
                 return []

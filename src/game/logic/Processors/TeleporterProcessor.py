@@ -27,7 +27,7 @@ class Teleporter(Processor):
             key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
         )
         dist: int = abs(closestTeleport.position.x - board_bot.position.x) + abs(closestTeleport.position.y - board_bot.position.y)
-        return [dist, closestTeleport.position]
+        return dist, closestTeleport.position
 
     # nearest diamond teleport
     def nearTeleDia(self, teleporter: list[GameObject], diamond: list[GameObject]) -> tuple[int, GameObject, GameObject]:
@@ -45,18 +45,16 @@ class Teleporter(Processor):
         nearTele2: int = abs(closestTeleport2.position.x - teleporter[1].position.x) + abs(closestTeleport2.position.y - teleporter[1].position.y)
 
         if(nearTele1 < nearTele2):
-            return [nearTele1, closestTeleport1, teleporter[0]]
+            return nearTele1, closestTeleport1, teleporter[0]
         else:
-            return [nearTele2, closestTeleport1, teleporter[1]]
+            return nearTele2, closestTeleport1, teleporter[1]
 
 
     def TeleOrDia(self, botTele: tuple[int, Position], nearestDia: tuple[int, Position], nearestTele: tuple[int, GameObject, GameObject]) -> tuple[int, Position]:
         distDia  = nearestDia[0]
         distTele: int = botTele[0] + nearestTele[0]
 
-        if(distDia < distTele):
-            return 1000, nearestDia[1]
-        else:
+        if(distDia > distTele):
             return 1000, botTele[1]
 
     def process(self, board_bot: GameObject, board: Board) -> list[tuple[int, Position]]:
