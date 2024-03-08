@@ -9,15 +9,23 @@ from game.logic.random import RandomLogic
 from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.TBD import TBDLogic
+from game.logic.botGreedyBase import GreedyBase
+from game.logic.botGreedyDiamonds import GreedyNearestDiamond
+from game.logic.botGreedyTackle import greedyTackle
 #from game.logic.random2 import RandomLogic2
 import traceback
 
 init()
+# print("init")
+# input()
 BASE_URL = "http://localhost:3000/api"
 DEFAULT_BOARD_ID = 1
 CONTROLLERS = {
     "Random": RandomLogic,
-    "TBD": TBDLogic
+    "TBD": TBDLogic,
+    "GreedyBase": GreedyBase,
+    "GreedyDiamond": GreedyNearestDiamond,
+    "GreedyTackle": greedyTackle
 }
 
 ###############################################################################
@@ -116,6 +124,8 @@ if not bot.name:
 print(Fore.BLUE + Style.BRIGHT + "Welcome back, " + Style.RESET_ALL + bot.name)
 
 # Setup variables
+# print("setup variables")
+# input()
 logic_class = CONTROLLERS[logic_controller]
 bot_logic: BaseLogic = logic_class()
 

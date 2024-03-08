@@ -1,6 +1,6 @@
 """
 
-from ...models import Board, Bot, GameObject
+from ...models import Board, Bot, GameObject, Position
 from typing import Optional
 
 
@@ -29,14 +29,23 @@ class ButtonProcessor:
         else:
             return ratio * self.closer
 
-    def process(self, board: Board) -> Optional[int]:
+    def process(self, board: Board) -> list[tuple[int, Position]]:
         bot_x, bot_y = self.get_bot_pos(board)
         if bot_x == -1:
-            return
+            return []
+        diamonds = [game_object for game_object in board.game_objects if game_object.type == "DiamondGameObject"]
+        but_l: list[GameObject] = [game_object for game_object in board.game_objects
+                              if game_object.type == "DiamondButtonGameObject"]
+        if not but_l:
+            return []
+        button: GameObject = but_l[0]
+        if not diamonds:
+            return [(67, button.position)]
         nearest_dia = min([game_object for game_object in board.game_objects
                            if game_object.type == "DiamondGameObject"],
                           key=lambda g: abs(bot_x - g.position.x) + abs(bot_y - g.position.y))
-        button: GameObject = [game_object for game_object in board.game_objects
-                              if game_object.type == "ButtonGameObject"][0]
         return round(self.eval_button(bot_x, bot_y, button, nearest_dia))
+
+
+
 """

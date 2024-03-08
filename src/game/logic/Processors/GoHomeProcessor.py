@@ -13,22 +13,25 @@ class GoHomeProcessor(Processor):
 
     def goHomeImmediately(self, board_bot: GameObject) -> Optional[list[int, Position]]:
         base = board_bot.properties.base
-        if (board_bot.properties.milliseconds_left <= ((abs(base.x - board_bot.position.x) + abs(base.y - board_bot.position.y))*2000) or board_bot.properties.diamonds == 5):
-            return [1, base] #TODO: figure out priorities
+        if ((board_bot.properties.milliseconds_left <= ((abs(base.x - board_bot.position.x) + abs(base.y - board_bot.position.y))*2000) and board_bot.properties.diamonds !=0) or board_bot.properties.diamonds == 5):
+            return [999, base]
         else: 
             return [None,None] #no need to go home immediately
         
-    #TODO: kalo udah 3 diamonds wander sekitar base aja
-    def wanderAroundHome(self, board_bot: GameObject, board: Board) -> Optional[list[int, Position]]:
+    #TODO: kalo udah 3 diamonds cari sekitar base aja
+    def searchAroundHome(self, board_bot: GameObject, board: Board) -> Optional[list[int, Position]]:
         base = board_bot.properties.base
         closestToBase = min(
                     board.diamonds,
                     key = lambda x: abs(x.position.x - base.position.x) + abs(x.position.y - base.position.y)
                 )
-        if (board_bot.properties.diamonds >= 3 and ((abs(closestToBase.position.x - base.x) + abs(closestToBase.position.y - base.y)) <= 4)):
-            return ([1, closestToBase.position]) #TODO: figure out priorities
+        distance = abs(closestToBase.position.x - base.x) + abs(closestToBase.position.y - base.y);
+        if (board_bot.properties.diamonds == 4 and (distance <= 6)):
+            return ([1, closestToBase.position]) 
+        elif (board_bot.properties.diamonds == 3 and (distance <= 4)): #karena sisa 4, cari yang deket banget aja
+            return ([1, closestToBase.position]) 
         else:
-            return ([1,base]) #TODO: figure out priorities
+            return ([1, base]) #mending balik
 
     def process(self, board_bot: GameObject, board: Board) -> Optional[list[tuple[int, Position]]]:
         a = self.goHomeImmediately(board_bot)
