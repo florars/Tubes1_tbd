@@ -27,18 +27,17 @@ class GoHomeProcessor(Processor):
                 )
         distance = abs(closestToBase.position.x - base.x) + abs(closestToBase.position.y - base.y);
         if (board_bot.properties.diamonds == 4 and (distance <= 6)):
-            return ([1, closestToBase.position]) 
+            return ([distance*1000/6, closestToBase.position]) 
         elif (board_bot.properties.diamonds == 3 and (distance <= 4)): #karena sisa 4, cari yang deket banget aja
-            return ([1, closestToBase.position]) 
+            return ([distance*1000/4, closestToBase.position]) 
         else:
-            return ([1, base]) #mending balik
+            return ([500, base]) #mending balik
 
     def process(self, board_bot: GameObject, board: Board) -> Optional[list[tuple[int, Position]]]:
         a = self.goHomeImmediately(board_bot)
         b = self.wanderAroundHome(board_bot, board)
         if (a != [None,None]):
             return a
-        elif (b != [None,None]):
-            return b
         else:
-            return []
+            return b
+
