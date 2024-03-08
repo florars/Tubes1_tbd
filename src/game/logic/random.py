@@ -85,4 +85,6 @@ class RandomLogic(BaseLogic):
                 self.current_direction = (self.current_direction + 1) % len(
                     self.directions
                 )
+        if delta_x == 0 and delta_y == 0:
+            return self.directions[random.randint(0, 3)]
         return delta_x, delta_y
