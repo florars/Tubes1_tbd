@@ -8,7 +8,6 @@ from ..logic.Processors.selfdefenseprocess import SelfDefense
 from ..logic.Processors.DiamondProcessor import DiamondProcessor
 from ..logic.Processors.GoHomeProcessor import GoHomeProcessor
 from ..logic.Processors.TeleporterProcessor import Teleporter
-import functools
 
 class TBDLogic(BaseLogic):
     def __init__(self):
@@ -132,8 +131,8 @@ class TBDLogic(BaseLogic):
         teleporter = [game_object.position for game_object in list(filter(lambda x: x.type == "TeleportGameObject", board.game_objects))]
         but_l = [game_object.position for game_object in list(filter(lambda x: x.type == "DiamondButtonGameObject", board.game_objects))]
         #print(possible_moves)
-        print(real_moves)
-        print(wrong_moves)
+        # print(real_moves)
+        # print(wrong_moves)
         #print(board_bot.position.x, board_bot.position.y)
         #print(board_bot.properties.diamonds)
         for prio, pos in real_moves:
