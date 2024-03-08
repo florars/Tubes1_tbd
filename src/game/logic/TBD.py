@@ -48,7 +48,7 @@ class TBDLogic(BaseLogic):
             max_y = max(pos_fr.y, pos_to.y)
         teleporter.extend(but_l)
         for obs in teleporter:
-            if func_dist(obs, pos_fr) <= 2 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)):
+            if func_dist(obs, pos_fr) <= 1 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)):
                 return False
         return True
 
@@ -147,7 +147,6 @@ class TBDLogic(BaseLogic):
                 if after_dist < cur_dist and self.no_obstacle(dist_x, dist_y, board_bot.position, pos, board):
                     self.goal_position = pos
                     self.OldPos = board_bot.position
-                    print(pos)
                     return self.directions[ind]
         self.goal_position = None
         self.OldPos = board_bot.position
