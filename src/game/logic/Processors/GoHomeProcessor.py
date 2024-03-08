@@ -23,7 +23,7 @@ class GoHomeProcessor(Processor):
         base = board_bot.properties.base
         closestToBase = min(
                     board.diamonds,
-                    key = lambda x: abs(x.position.x - base.position.x) + abs(x.position.y - base.position.y)
+                    key = lambda x: abs(x.position.x - base.x) + abs(x.position.y - base.y)
                 )
         distance = abs(closestToBase.position.x - base.x) + abs(closestToBase.position.y - base.y);
         if (board_bot.properties.diamonds == 4 and (distance <= 6)):
@@ -35,7 +35,7 @@ class GoHomeProcessor(Processor):
 
     def process(self, board_bot: GameObject, board: Board) -> Optional[list[tuple[int, Position]]]:
         a = self.goHomeImmediately(board_bot)
-        b = self.wanderAroundHome(board_bot, board)
+        b = self.searchAroundHome(board_bot, board)
         if (a != [None,None]):
             return a
         else:
