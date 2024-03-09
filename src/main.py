@@ -9,11 +9,12 @@ from game.logic.random import RandomLogic
 from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.TBD import TBDLogic
+from game.logic.TBD_copy import TBDLogicCopy
+from game.logic.botGreedyBase import GreedyBase
+from game.logic.botGreedyTackle import greedyTackle
+from game.logic.botGreedyDiamonds import GreedyNearestDiamond
 import traceback
 from time import time
-from game.logic.botGreedyBase import GreedyBase
-from game.logic.botGreedyDiamonds import GreedyNearestDiamond
-from game.logic.botGreedyTackle import greedyTackle
 from game.logic.kliktombol import KlikTombol
 
 init()
@@ -25,7 +26,8 @@ CONTROLLERS = {
     "botGreedyDiamonds": GreedyNearestDiamond,
     "botGreedyBase": GreedyBase,
     "botGreedyTackle": greedyTackle,
-    "kliktombol": KlikTombol
+    "kliktombol": KlikTombol,
+    "TBD2": TBDLogicCopy
 }
 
 ###############################################################################
@@ -224,7 +226,7 @@ while True:
 
     # Don't spam the board more than it allows!
     # sleep(move_delay * time_factor)
-    sleep(0.1)
+    sleep(0.5)
 
 
 ###############################################################################
