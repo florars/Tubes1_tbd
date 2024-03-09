@@ -10,12 +10,16 @@ class GoHomeProcessor(Processor):
     def __init__(self):
         super().__init__()
 
-    def calc_prio(self, dist_home, dist_dia, multiplier, likelihood) -> int:
-        if likelihood == 100:
+    def calc_prio(self, dist_home, dist_dia, multiplier, likelihood, notCalled=False) -> int:
+        constant = 20
+        if likelihood == 100 and not notCalled:
             return 500
-        return likelihood + multiplier * (dist_dia - dist_home)
+        if not notCalled:
+            return likelihood + multiplier * (dist_dia - dist_home)
+        else:
+            return likelihood + multiplier * (dist_dia - dist_home - constant)
 
-    def process(self, board_bot: GameObject, board: Board, dtl: int = 0, calledfromtele = False) -> list[tuple[int, Position]]:
+    def process(self, board_bot: GameObject, board: Board, dtl: int = 0, calledfromtele=False) -> list[tuple[int, Position]]:
         home_pos: Position = board_bot.properties.base
         diamonds = list(filter(lambda x: x.type == "DiamondGameObject", board.game_objects))
         inv_now: int = board_bot.properties.diamonds
@@ -24,7 +28,7 @@ class GoHomeProcessor(Processor):
             return [(inv_now * 100, home_pos)]  # kalo inventory = 0 gak ngaruh
         secLeft: int = board_bot.properties.milliseconds_left // 1000
         # kalo waktu dikit -> pulang, takut mubazir, ambil diamond deket base aja
-        if secLeft - get_dist(home_pos, board_bot.position) == 0 and dtl == 0 and not calledfromtele:
+        if secLeft - get_dist(home_pos, board_bot.position) <= 1 and not calledfromtele:
             return [(501, home_pos)]
         likelihood: int = 0
         multiplier: int = 0
@@ -44,7 +48,7 @@ class GoHomeProcessor(Processor):
         nearest_diamond: GameObject = min(diamonds, key=lambda y: get_dist(y.position, board_bot.position))
         dist_dia: int = get_dist(nearest_diamond.position, board_bot.position)
         dist_home: int = get_dist(home_pos, board_bot.position)
-        priority_home = self.calc_prio(dist_home + dtl, dist_dia + dtl, multiplier, likelihood)
+        priority_home = self.calc_prio(dist_home + dtl, dist_dia + dtl, multiplier, likelihood, calledfromtele)
         if priority_home <= 0:
             return []
         return [(priority_home, home_pos)]
