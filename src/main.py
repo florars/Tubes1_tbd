@@ -14,6 +14,7 @@ from time import time
 from game.logic.botGreedyBase import GreedyBase
 from game.logic.botGreedyDiamonds import GreedyNearestDiamond
 from game.logic.botGreedyTackle import greedyTackle
+from game.logic.kliktombol import KlikTombol
 
 init()
 BASE_URL = "http://localhost:3000/api"
@@ -23,7 +24,8 @@ CONTROLLERS = {
     "TBD": TBDLogic,
     "botGreedyDiamonds": GreedyNearestDiamond,
     "botGreedyBase": GreedyBase,
-    "botGreedyTackle": greedyTackle
+    "botGreedyTackle": greedyTackle,
+    "kliktombol": KlikTombol
 }
 
 ###############################################################################

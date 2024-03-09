@@ -8,6 +8,8 @@ from ..logic.Processors.selfdefenseprocess import SelfDefense
 from ..logic.Processors.DiamondProcessor import DiamondProcessor
 from ..logic.Processors.GoHomeProcessor import GoHomeProcessor
 from ..logic.Processors.TeleporterProcessor import Teleporter
+from ..logic.Processors.ButtonProcessor import ButtonProcessor
+import threading
 
 class TBDLogic(BaseLogic):
     def __init__(self):
@@ -19,6 +21,7 @@ class TBDLogic(BaseLogic):
         self.DiamondProcessor: DiamondProcessor = DiamondProcessor()
         self.TeleportProcessor: Teleporter = Teleporter()
         self.GoHomeProcessor: GoHomeProcessor = GoHomeProcessor()
+        self.ButtonProcessor: ButtonProcessor = ButtonProcessor()
         self.TackleCounter = 0
         self.TackleTarget = None
         self.OldPos: Optional[Position] = None
@@ -47,7 +50,7 @@ class TBDLogic(BaseLogic):
             max_y = max(pos_fr.y, pos_to.y)
         teleporter.extend(but_l)
         for obs in teleporter:
-            if func_dist(obs, pos_fr) <= 1 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)):
+            if func_dist(obs, pos_fr) <= 2 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)):
                 return False
         return True
 
@@ -73,8 +76,10 @@ class TBDLogic(BaseLogic):
         self.TackleCounter = 0
         listDia = self.DiamondProcessor.process(board_bot, board)
         listGoHome = self.GoHomeProcessor.process(board_bot, board)
+        listButton = self.ButtonProcessor.process(board_bot, board)
         possible_moves.extend(listDia)
         possible_moves.extend(listGoHome)
+        possible_moves.extend(listButton)
         if not listDia:
             score_dia = 0
         else:
@@ -111,6 +116,7 @@ class TBDLogic(BaseLogic):
             wrong_moves[3] = True
             cnt_wrong_mv += 1
         real_moves: list[tuple[int, Position]] = list(filter(lambda x: x[0] != -1, possible_moves))
+        real_moves.append((10, board_bot.properties.base))
         """
         minOnes = list(filter(lambda x: x[0] == -1, possible_moves))
         for noMove in minOnes:
@@ -131,8 +137,9 @@ class TBDLogic(BaseLogic):
         teleporter = [game_object.position for game_object in list(filter(lambda x: x.type == "TeleportGameObject", board.game_objects))]
         but_l = [game_object.position for game_object in list(filter(lambda x: x.type == "DiamondButtonGameObject", board.game_objects))]
         #print(possible_moves)
-        # print(real_moves)
-        # print(wrong_moves)
+        #print(real_moves)
+        #print(wrong_moves)
+        #print(board_bot.position)
         #print(board_bot.position.x, board_bot.position.y)
         #print(board_bot.properties.diamonds)
         for prio, pos in real_moves:

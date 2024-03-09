@@ -38,6 +38,7 @@ class SelfDefense(Processor):
             nearest_enemy.position.y - board_bot.position.y)
         return distance
     """
+
     def process(self, board_bot: GameObject, board: Board):
         props = board_bot.properties
         # Analyze new state
@@ -45,7 +46,7 @@ class SelfDefense(Processor):
         if len(board.bots) == 1:
             return []
         func_dist = lambda x, y: abs(x.position.x - y.position.x) + abs(x.position.y - y.position.y)
-        dist_one = list(filter(lambda x: func_dist(x, board_bot) == 1, board.bots))
+        dist_one = list(filter(lambda x: func_dist(x, board_bot) == 1 and (x.position.x != x.properties.base.x or x.position.y != x.properties.base.y), board.bots))
         if dist_one:
             maxWithDia = max(dist_one, key=lambda x: x.properties.diamonds)
             #move_at = Position(maxWithDia.position.y - board_bot.position.y, maxWithDia.position.x - board_bot.position.x, )
