@@ -2,9 +2,9 @@ import random
 from typing import Optional
 
 #from game.logic.base import BaseLogic
-from game.models import GameObject, Board, Position
+from ...models import GameObject, Board, Position
 #from ...util import get_direction
-from game.models import Board
+from ...models import Board
 
 class Processor:
 

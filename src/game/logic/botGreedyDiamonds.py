@@ -73,5 +73,6 @@ class GreedyNearestDiamond(BaseLogic):
                 self.goal_position.x,
                 self.goal_position.y,
             )
-
+        if delta_x == 0 and delta_y == 0:
+            return self.directions[random.randint(0, 3)]
         return delta_x, delta_y

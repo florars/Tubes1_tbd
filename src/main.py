@@ -13,8 +13,6 @@ from game.logic.TBD_copy import TBDLogicCopy
 from game.logic.botGreedyBase import GreedyBase
 from game.logic.botGreedyTackle import greedyTackle
 from game.logic.botGreedyDiamonds import GreedyNearestDiamond
-import traceback
-from time import time
 from game.logic.kliktombol import KlikTombol
 
 init()
@@ -179,9 +177,7 @@ move_delay = board.minimum_delay_between_moves / 1000
 #
 # Game play loop
 #
-####################################################################
-total_time = 0
-cnt_called = 0
+###############################################################################
 while True:
     # Find our info among the bots on the board
     board_bot = board.get_bot(bot)
@@ -190,14 +186,7 @@ while True:
         break
 
     # Calculate next move
-    try:
-        beg = time()
-        delta_x, delta_y = bot_logic.next_move(board_bot, board)
-        en = time()
-        total_time += en - beg
-        cnt_called += 1
-    except Exception as e:
-        traceback.print_exc()
+    delta_x, delta_y = bot_logic.next_move(board_bot, board)
     # delta_x, delta_y = (1, 0)
     if not board.is_valid_move(board_bot.position, delta_x, delta_y):
         print(
@@ -226,7 +215,7 @@ while True:
 
     # Don't spam the board more than it allows!
     # sleep(move_delay * time_factor)
-    sleep(0.5)
+    sleep(1)
 
 
 ###############################################################################
@@ -235,5 +224,3 @@ while True:
 #
 ###############################################################################
 print(Fore.BLUE + Style.BRIGHT + "Game over!" + Style.RESET_ALL)
-print(total_time / cnt_called)
-input()

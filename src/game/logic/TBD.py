@@ -68,7 +68,7 @@ class TBDLogic(BaseLogic):
                     listSelfD[0][1].properties.name):
                 self.TackleTarget = listSelfD[0][1].properties.name
                 self.TackleCounter += 1
-                print(self.TackleTarget, self.TackleCounter)
+                #print(self.TackleTarget, self.TackleCounter)
                 self.goal_position = None
                 self.OldPos = board_bot.position
                 return listSelfD[0][1].position.x - board_bot.position.x, listSelfD[0][1].position.y - board_bot.position.y
