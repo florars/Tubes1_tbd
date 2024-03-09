@@ -17,7 +17,7 @@ from game.logic.kliktombol import KlikTombol
 
 init()
 BASE_URL = "http://localhost:3000/api"
-DEFAULT_BOARD_ID = 10
+DEFAULT_BOARD_ID = 1
 CONTROLLERS = {
     "Random": RandomLogic,
     "TBD": TBDLogic,
