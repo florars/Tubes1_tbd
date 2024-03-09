@@ -77,4 +77,6 @@ class greedyTackle(Processor):
                 self.current_direction = (self.current_direction + 1) % len(
                     self.directions
                 )
+        
+        return delta_x, delta_y
             

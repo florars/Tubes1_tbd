@@ -60,7 +60,7 @@ class RandomLogic(BaseLogic):
                     key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
                 ) 
                 closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
-            if(closeToRed < closeToBlue):
+            if(closeToRed < closeToBlue and board_bot.properties.diamonds <= 3):
                 self.goal_position = closestRed.position
             else: 
                 self.goal_position = closestBlue.position
