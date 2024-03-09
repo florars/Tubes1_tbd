@@ -226,7 +226,7 @@ while True:
 
     # Don't spam the board more than it allows!
     # sleep(move_delay * time_factor)
-    sleep(0.5)
+    sleep(1)
 
 
 ###############################################################################
@@ -236,4 +236,3 @@ while True:
 ###############################################################################
 print(Fore.BLUE + Style.BRIGHT + "Game over!" + Style.RESET_ALL)
 print(total_time / cnt_called)
-input()
