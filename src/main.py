@@ -9,11 +9,13 @@ from game.logic.random import RandomLogic
 from game.util import *
 from game.logic.base import BaseLogic
 from game.logic.TBD import TBDLogic
+from game.logic.TBD_copy import TBDLogicCopy
 from game.logic.botGreedyBase import GreedyBase
 from game.logic.botGreedyTackle import greedyTackle
 from game.logic.botGreedyDiamonds import GreedyNearestDiamond
 import traceback
 from time import time
+from game.logic.kliktombol import KlikTombol
 
 init()
 BASE_URL = "http://localhost:3000/api"
@@ -21,9 +23,11 @@ DEFAULT_BOARD_ID = 1
 CONTROLLERS = {
     "Random": RandomLogic,
     "TBD": TBDLogic,
-    "GreedyBase": GreedyBase,
-    "GreedyDiamond": GreedyNearestDiamond,
-    "GreedyTackle": greedyTackle
+    "botGreedyDiamonds": GreedyNearestDiamond,
+    "botGreedyBase": GreedyBase,
+    "botGreedyTackle": greedyTackle,
+    "kliktombol": KlikTombol,
+    "TBD2": TBDLogicCopy
 }
 
 ###############################################################################

@@ -93,7 +93,7 @@ class Teleporter(Processor):
         prio_h_through_tele1 = self.GoHomeProcessor.process(tele1GO, board, dtl1, True)
         prio_h_through_tele2 = self.GoHomeProcessor.process(tele2GO, board, dtl2, True)
         if prio_h_through_tele1:
-            ans.append((prio_h_through_tele1[0][0] - 30, tele1.position))
+            ans.append((prio_h_through_tele1[0][0], tele1.position))
         if prio_h_through_tele2:
-            ans.append((prio_h_through_tele2[0][0] - 30, tele2.position))
+            ans.append((prio_h_through_tele2[0][0], tele2.position))
         return ans

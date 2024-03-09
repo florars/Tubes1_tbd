@@ -11,7 +11,7 @@ from ..logic.Processors.TeleporterProcessor import Teleporter
 from ..logic.Processors.ButtonProcessor import ButtonProcessor
 import threading
 
-class TBDLogic(BaseLogic):
+class TBDLogicCopy(BaseLogic):
     def __init__(self):
         self.directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         self.goal_position: Optional[Position] = None
@@ -115,6 +115,31 @@ class TBDLogic(BaseLogic):
         if board_bot.position.y == 0:
             wrong_moves[3] = True
             cnt_wrong_mv += 1
+
+
+        if(len(board.bots)>1):
+            func_dist = lambda x, y: abs(x.position.x - y.position.x) + abs(x.position.y - y.position.y)
+            dist_two = list(filter(lambda x: func_dist(x, board_bot) == 2 and (x.position.x != x.properties.base.x or x.position.y != x.properties.base.y), board.bots))
+            i = 0
+            while (i<len(dist_two) and cnt_wrong_mv < 4):
+                dist_enemy_x = dist_two[i].position.x - board_bot.position.x
+                dist_enemy_y = dist_two[i].position.y - board_bot.position.y
+                if (dist_enemy_x != 0 and dist_enemy_y != 0):
+                    if (dist_enemy_x == -1 and wrong_moves[2] == False):
+                        wrong_moves[2] = True
+                        cnt_wrong_mv += 1
+                    elif (dist_enemy_x == 1 and wrong_moves[0] == False):
+                        wrong_moves[0] = True
+                        cnt_wrong_mv += 1
+                    if (dist_enemy_y == -1 and wrong_moves[3] == False):
+                        wrong_moves[3] = True
+                        cnt_wrong_mv += 1
+                    elif (dist_enemy_y == 1 and wrong_moves[1] == False):
+                        wrong_moves[1] = True
+                        cnt_wrong_mv += 1
+                i += 1
+
+
         real_moves: list[tuple[int, Position]] = list(filter(lambda x: x[0] != -1, possible_moves))
         real_moves.append((10, board_bot.properties.base))
         """
