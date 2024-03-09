@@ -18,7 +18,7 @@ Algoritma utama dari project ini adalah algoritma greedy yang mana banyak sekali
 Jadi, inti dari algoritma greedy pada project ini adalah mencapai keuntungan maksimal dengan memperhitungan setiap gerakan yang diambil. 
 
 ## Running Program
-Jalankan command dibawah dari directory root TUBES1_TBD
+Jalankan command dibawah dari directory src dari repository TUBES1_TBD
 untuk windows 
 ```
 .\run-bots.bat
