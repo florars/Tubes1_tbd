@@ -45,26 +45,26 @@ class RandomLogic(BaseLogic):
             base = board_bot.properties.base
             self.goal_position = base
         else:
-            closeToRed: int = 1000
-            closeToBlue: int = 1000
-            if redDiamondPos:
-                closestRed = min(
-                    redDiamondPos,
-                    key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
-                )
-                closeToRed = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
+            closestRed = min(
+                redDiamondPos,
+                key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+            )
+            closestBlue = min(
+                blueDiamondPos,
+                key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
+            )
 
-            if blueDiamondPos:
-                closestBlue = min(
-                    blueDiamondPos,
-                    key = lambda x: abs(x.position.x - board_bot.position.x) + abs(x.position.y - board_bot.position.y)
-                ) 
-                closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
+            closeToRed = abs(closestRed.position.x - board_bot.position.x) + abs(closestRed.position.y - board_bot.position.y) 
+            closeToBlue = abs(closestBlue.position.x - board_bot.position.x) + abs(closestBlue.position.y - board_bot.position.y) 
             if(closeToRed < closeToBlue):
                 self.goal_position = closestRed.position
             else: 
                 self.goal_position = closestBlue.position
-
+                
+        
+        # ansTele = self.diamondPos(board, "TeleportGameObject")
+        # print("diamon: " + str(ansdiamond))
+        # print("teleporter: " +  str(ansTele))
 
         current_position = board_bot.position
         if self.goal_position:
@@ -85,6 +85,4 @@ class RandomLogic(BaseLogic):
                 self.current_direction = (self.current_direction + 1) % len(
                     self.directions
                 )
-        if delta_x == 0 and delta_y == 0:
-            return self.directions[random.randint(0, 3)]
         return delta_x, delta_y
