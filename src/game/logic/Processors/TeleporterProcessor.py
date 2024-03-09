@@ -75,19 +75,19 @@ class Teleporter(Processor):
         minDia2 = min(diamonds, key=lambda x: funcGO(x, tele2))
         dtl1 = funcGO(tele1, board_bot)
         dtl2 = funcGO(tele2, board_bot)
-        if funcGO(minDia1, tele1) + dtl1 >= len(self.DiamondProcessor.prio_dia):
+        if funcGO(minDia1, tele1) + dtl2 >= len(self.DiamondProcessor.prio_dia):
             max1 = -1
         else:
-            max1 = self.DiamondProcessor.prio_dia[funcGO(minDia1, tele1) + dtl1]
-        if funcGO(minDia2, tele2) + dtl2 >= len(self.DiamondProcessor.prio_dia):
+            max1 = self.DiamondProcessor.prio_dia[funcGO(minDia1, tele1) + dtl2]
+        if funcGO(minDia2, tele2) + dtl1 >= len(self.DiamondProcessor.prio_dia):
             max2 = -1
         else:
-            max2 = self.DiamondProcessor.prio_dia[funcGO(minDia2, tele2) + dtl2]
+            max2 = self.DiamondProcessor.prio_dia[funcGO(minDia2, tele2) + dtl1]
         ans = []
         if max1 > 0 and max1 > maxi_val and max1 >= max2:
-            ans.append((max1, tele1.position))
+            ans.append((max1, tele2.position))
         if max2 > 0 and max2 > maxi_val and max2 > max1:
-            ans.append((max2, tele2.position))
+            ans.append((max2, tele1.position))
         tele1GO = GameObject(board_bot.id, tele1.position, board_bot.type, board_bot.properties)
         tele2GO = GameObject(board_bot.id, tele2.position, board_bot.type, board_bot.properties)
         prio_h_through_tele1 = self.GoHomeProcessor.process(tele1GO, board, dtl1, True)

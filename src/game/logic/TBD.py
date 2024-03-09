@@ -25,6 +25,8 @@ class TBDLogic(BaseLogic):
         self.TackleCounter = 0
         self.TackleTarget = None
         self.OldPos: Optional[Position] = None
+        self.Turned = False
+        self.pos_turned = False
 
     def no_obstacle(self, dist_x, dist_y, pos_fr: Position, pos_to: Position, board: Board):
         teleporter = [game_object.position for game_object in list(filter(lambda x: x.type == "TeleportGameObject", board.game_objects))]
@@ -51,11 +53,15 @@ class TBDLogic(BaseLogic):
         teleporter.extend(but_l)
         for obs in teleporter:
             if func_dist(obs, pos_fr) <= 2 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)):
+                self.pos_turned = True
                 return False
+            elif func_dist(obs, pos_fr) == 3 and ((obs.x == same_x and min_y <= obs.y <= max_y) or (obs.y == same_y and min_x <= obs.x <= max_x)) and self.Turned:
+                return True
         return True
 
     def next_move(self, board_bot: GameObject, board: Board):
         wrong_moves = [False, False, False, False]
+        self.pos_turned = False
         for wr in self.memory_wrong_move:
             wrong_moves[wr] = True
         self.memory_wrong_move = []
@@ -144,16 +150,24 @@ class TBDLogic(BaseLogic):
         #print(board_bot.properties.diamonds)
         for prio, pos in real_moves:
             for ind in range(4):
+                pos_turned = False
                 if wrong_moves[ind]:
                     continue
                 dist_x, dist_y = self.directions[ind]
                 cur_dist = abs(board_bot.position.x - pos.x) + abs(board_bot.position.y - pos.y)
                 after_dist = abs(board_bot.position.x + dist_x - pos.x) + abs(board_bot.position.y + dist_y - pos.y)
                 pos_after = Position(board_bot.position.y + dist_y, board_bot.position.x + dist_x)
-                if after_dist < cur_dist and self.no_obstacle(dist_x, dist_y, board_bot.position, pos, board):
-                    self.goal_position = pos
-                    self.OldPos = board_bot.position
-                    return self.directions[ind]
+                if after_dist < cur_dist:
+                    if not self.no_obstacle(dist_x, dist_y, board_bot.position, pos, board):
+                        pass
+                    else:
+                        if self.pos_turned:
+                            self.Turned = True
+                        elif self.Turned and not self.pos_turned:
+                            self.Turned = False
+                        self.goal_position = pos
+                        self.OldPos = board_bot.position
+                        return self.directions[ind]
         self.goal_position = None
         self.OldPos = board_bot.position
         for i in range(4):
